@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import projects.yuskie.chessV3.chess.*;
 
-
 import org.junit.Before;
 import org.junit.Test;
 

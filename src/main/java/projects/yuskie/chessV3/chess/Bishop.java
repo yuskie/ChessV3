@@ -1,7 +1,12 @@
 package projects.yuskie.chessV3.chess;
 
+import static projects.yuskie.chessV3.chess.Utility.BOARD_SIZE;
+import static projects.yuskie.chessV3.chess.Utility.diagonalMovement;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import projects.yuskie.chessV3.chess.Utility.Color;
-import static projects.yuskie.chessV3.chess.Utility.*;
 
 public class Bishop implements Piece {
 	private Color color;

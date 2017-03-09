@@ -3,6 +3,8 @@ package projects.yuskie.chessV3.chess;
 import projects.yuskie.chessV3.chess.Utility.Color;
 import static projects.yuskie.chessV3.chess.Utility.*;
 
+import java.util.List;
+
 public class Rook implements Piece {
 	private Color color;
 	private boolean moved;
@@ -24,6 +26,11 @@ public class Rook implements Piece {
 			color = "w";
 		}
 		return color + "-R";
+	}
+	
+	public List<String> possibleMovements(String location){
+		
+		return null;
 	}
 
 	public Color getColor() {
