@@ -130,15 +130,43 @@ public class ChessBoardTest {
 		
 	}
 	
+//	@Test
+//	public void pawn_promotion(){
+//		Pawn blackPawn = new Pawn(BLACK);
+//		Pawn whitePawn = new Pawn(WHITE);
+//		newBoard.getBoardState().put("a7", whitePawn);
+//		newBoard.getBoardState().put("a2", blackPawn);
+//		newBoard.movePiece(WHITE, "a7", "a8");
+//		assertNotEquals(newBoard.getBoardState().get("a8").getClass(), Pawn.class);
+//		newBoard.movePiece(BLACK, "a2", "a1");
+//		assertNotEquals(newBoard.getBoardState().get("a1").getClass(), Pawn.class);
+//	}
+//	
 	@Test
-	public void pawn_promotion(){
+	public void black_pawn_enpassant(){
 		Pawn blackPawn = new Pawn(BLACK);
 		Pawn whitePawn = new Pawn(WHITE);
-		newBoard.getBoardState().put("a7", whitePawn);
-		newBoard.getBoardState().put("a2", blackPawn);
-		newBoard.movePiece(WHITE, "a7", "a8");
-		assertNotEquals(newBoard.getBoardState().get("a8").getClass(), Pawn.class);
-		newBoard.movePiece(BLACK, "a2", "a1");
-		assertNotEquals(newBoard.getBoardState().get("a1").getClass(), Pawn.class);
+		newBoard.getBoardState().put("a2", whitePawn);
+		newBoard.getBoardState().put("b4", blackPawn);
+		newBoard.movePiece(WHITE, "a2", "a4");
+		newBoard.movePiece(BLACK, "b4", "a3");
+		assertNull(newBoard.getBoardState().get("a4"));
+		assertNotNull(newBoard.getBoardState().get("a3"));
+		assertNull(newBoard.getBoardState().get("a2"));
+		assertNull(newBoard.getBoardState().get("b4"));
+	}
+	
+	@Test
+	public void white_pawn_enpassant(){
+		Pawn blackPawn = new Pawn(BLACK);
+		Pawn whitePawn = new Pawn(WHITE);
+		newBoard.getBoardState().put("b7", blackPawn);
+		newBoard.getBoardState().put("a5", whitePawn);
+		newBoard.movePiece(BLACK, "b7", "b5");
+		newBoard.movePiece(WHITE, "a5", "b6");
+		assertNull(newBoard.getBoardState().get("b5"));
+		assertNotNull(newBoard.getBoardState().get("b6"));
+		assertNull(newBoard.getBoardState().get("a5"));
+		assertNull(newBoard.getBoardState().get("b7"));
 	}
 }

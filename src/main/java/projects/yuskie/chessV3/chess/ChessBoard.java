@@ -23,8 +23,9 @@ public class ChessBoard {
 
 	private static final int BOARD_SIZE = 8;
 
+	private String pawnLoc = "";
 	private boolean pawnMoved = false;
-	private String enPassantLoc;
+	private String enPassantLoc = "";
 
 	public ChessBoard() {
 		boardState = new HashMap<String, Piece>();
@@ -58,7 +59,7 @@ public class ChessBoard {
 				if (castleRook != null && castleRook.getClass() == Rook.class && !castleRook.isMoved()) {
 					castling(startLocation, endLocation, kingPiece, closestRookLoc, castleRook);
 					pawnMoved = false;
-					enPassantLoc = null;
+					enPassantLoc = "";
 					return true;
 				}
 			}
@@ -69,9 +70,13 @@ public class ChessBoard {
 	}
 
 	private boolean enPassant(String startLocation, String endLocation, Piece movingPiece) {
-		if(Utility.diagonalMovement(startLocation, endLocation, 1)&&endLocation.equals(enPassantLoc)){
+		if(Utility.diagonalMovement(startLocation, endLocation, 1)&&endLocation.equals(enPassantLoc) && pawnMoved){
 			boardState.put(endLocation, movingPiece);
 			boardState.put(startLocation, null);
+			boardState.put(pawnLoc, null);
+			enPassantLoc = "";
+			pawnMoved = false;
+			pawnLoc = "";
 			return true;
 		}
 		return false;
@@ -107,6 +112,7 @@ public class ChessBoard {
 		if (movingPiece.getClass() == Pawn.class && Math
 				.abs(Integer.parseInt(endLocation.substring(1)) - Integer.parseInt(startLocation.substring(1))) == 2) {
 			enPassantLoc = Utility.getNextLoc(startLocation, endLocation);
+			pawnLoc = endLocation;
 			return true;
 		}
 		enPassantLoc = null;
