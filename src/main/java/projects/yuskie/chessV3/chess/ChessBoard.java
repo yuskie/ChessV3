@@ -1,8 +1,10 @@
 package projects.yuskie.chessV3.chess;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import projects.yuskie.chessV3.chess.Utility.Color;
 
@@ -46,6 +48,8 @@ public class ChessBoard {
 		Piece movingPiece = boardState.get(startLocation);
 		if (movingPiece == null || movingPiece.getColor() != color) {
 			return false;
+		} else if (isInCheck(color)){
+			outOfCheck(startLocation, endLocation);
 		} else if (checkValidMove(startLocation, endLocation, movingPiece)) {
 			pawnMoved = pawnMoved(startLocation, endLocation, movingPiece);
 			movePieces(startLocation, endLocation, movingPiece);
@@ -70,7 +74,7 @@ public class ChessBoard {
 	}
 
 	private boolean enPassant(String startLocation, String endLocation, Piece movingPiece) {
-		if(Utility.diagonalMovement(startLocation, endLocation, 1)&&endLocation.equals(enPassantLoc) && pawnMoved){
+		if (Utility.diagonalMovement(startLocation, endLocation, 1) && endLocation.equals(enPassantLoc) && pawnMoved) {
 			boardState.put(endLocation, movingPiece);
 			boardState.put(startLocation, null);
 			boardState.put(pawnLoc, null);
@@ -176,6 +180,32 @@ public class ChessBoard {
 		boardState.put(rookEndLoc, castleRook);
 		boardState.put(startLocation, null);
 		boardState.put(closestRookLoc, null);
+	}
+
+	private String locateKing(Color color) {
+		Set<String> keys = boardState.keySet();
+		for (String key : keys) {
+			if (boardState.get(key) != null && boardState.get(key).getClass() == King.class
+					&& boardState.get(key).getColor() == color) {
+				return key;
+			}
+		}
+		// Shouldn't happen
+		return null;
+	}
+
+	private boolean isInCheck(Color color){
+		String kingLoc = locateKing(color);
+		Set<String> locations = boardState.keySet();
+		for(String loc: locations){
+			if(boardState.get(loc) != null && boardState.get(loc).getColor() != color){
+				List<String> moves = Utility.generateAllMoves(loc, boardState.get(loc));
+				if(moves.contains(kingLoc) && blockingPath(loc, kingLoc)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private String getRookEndLoc(String closestRookLoc) {
