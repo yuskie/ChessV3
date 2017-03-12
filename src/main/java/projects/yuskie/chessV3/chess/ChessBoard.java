@@ -1,5 +1,6 @@
 package projects.yuskie.chessV3.chess;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,11 +123,31 @@ public class ChessBoard {
 		String kingLoc = locateKing(color);
 		Piece king = boardState.get(kingLoc);
 		List<String> kingMoves = Utility.generateAllMoves(kingLoc, king);
-		for(String move: kingMoves){
-			isInCheck(color);
+		for (String move : kingMoves) {
+			if(!notBlockingPath(kingLoc, move)){
+				continue;
+			}
+			Piece kingMoveLocPiece = boardState.get(move);
+			boardState.put(move, king);
+			if (!isInCheck(color)) {
+				boardState.put(kingLoc, king);
+				boardState.put(move, kingMoveLocPiece);
+				return false;
+			}
+			boardState.put(kingLoc, king);
+			boardState.put(move, kingMoveLocPiece);
 			
+			Set<String> locations = boardState.keySet();
+			for (String loc : locations) {
+				if (boardState.get(loc) != null && boardState.get(loc).getColor() == color && boardState.get(loc) != king) {
+					List<String> moves = Utility.generateAllMoves(loc, boardState.get(loc));
+					if (moves.contains(move) && notBlockingPath(loc, move)) {
+						return false;
+					}
+				}
+			}
 		}
-		return false;
+		return true;
 	}
 
 	public void print() {
@@ -199,11 +220,11 @@ public class ChessBoard {
 
 	private boolean canCastle(String startLocation, String endLocation, King kingPiece) {
 		return Utility.castlingMovement(startLocation, endLocation, kingPiece.isMoved())
-				&& blockingPath(startLocation, endLocation);
+				&& notBlockingPath(startLocation, endLocation);
 	}
 
 	private boolean checkValidMove(String startLocation, String endLocation, Piece movingPiece) {
-		return movingPiece.validMove(startLocation, endLocation) && blockingPath(startLocation, endLocation);
+		return movingPiece.validMove(startLocation, endLocation) && notBlockingPath(startLocation, endLocation);
 	}
 
 	private void movePieces(String startLocation, String endLocation, Piece movingPiece) {
@@ -233,27 +254,20 @@ public class ChessBoard {
 		return null;
 	}
 
-	private boolean isInCheck(Color color, String kingLoc, String endLoc){
-		Piece king = boardState.get(kingLoc);
-		Piece endPiece = boardState.get(endLoc);
-		movePieces(kingLoc, endLoc, king);
-		return false;
-	}
-	
 	private boolean isInCheck(Color color) {
 		String kingLoc = locateKing(color);
 		Set<String> locations = boardState.keySet();
 		for (String loc : locations) {
 			if (boardState.get(loc) != null && boardState.get(loc).getColor() != color) {
 				List<String> moves = Utility.generateAllMoves(loc, boardState.get(loc));
-				if (moves.contains(kingLoc) && blockingPath(loc, kingLoc)) {
+				if (moves.contains(kingLoc) && notBlockingPath(loc, kingLoc)) {
 					return true;
 				}
 			}
 		}
 		return false;
 	}
-
+	
 	private String getRookEndLoc(String closestRookLoc) {
 		String rookEndLoc = "";
 		if (closestRookLoc.substring(0, 1).equals(Utility.XVALUES[0])) {
@@ -285,7 +299,7 @@ public class ChessBoard {
 		return result;
 	}
 
-	private boolean blockingPath(String startLocation, String endLocation) {
+	private boolean notBlockingPath(String startLocation, String endLocation) {
 		Piece endLocPiece = boardState.get(endLocation);
 		Piece startPiece = boardState.get(startLocation);
 		if (endLocPiece != null && endLocPiece.getColor() == startPiece.getColor()) {

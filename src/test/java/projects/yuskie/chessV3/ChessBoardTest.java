@@ -192,7 +192,6 @@ public class ChessBoardTest {
 		newBoard.getBoardState().put("h4", whiteRook);
 		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
 		assertTrue(newBoard.movePiece(WHITE, "h4", "e4"));
-		newBoard.print();
 	}
 	
 	@Test
@@ -205,6 +204,34 @@ public class ChessBoardTest {
 		newBoard.getBoardState().put("h4", whiteRook);
 		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
 		assertTrue(newBoard.movePiece(WHITE, "h4", "e4"));
+	}
+	
+	@Test
+	public void check_king_moves_Test(){
+		Bishop blackBishop = new Bishop(BLACK);
+		King whiteKing = new King(WHITE);
+		Rook whiteRook = new Rook(WHITE);
+		newBoard.getBoardState().put("d3", whiteKing);
+		newBoard.getBoardState().put("f5", blackBishop);
+		newBoard.getBoardState().put("h4", whiteRook);
+		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
+		assertFalse(newBoard.movePiece(WHITE, "d3", "e4"));
+		assertTrue(newBoard.movePiece(WHITE, "d3", "c3"));
+	}
+	
+	@Test
+	public void checkmate_Test(){
+		Queen blackQueen = new Queen(BLACK);
+		King whiteKing = new King(WHITE);
+		newBoard.getBoardState().put("a1", whiteKing);
+		newBoard.getBoardState().put("b2", blackQueen);
+		Rook blackRook = new Rook(BLACK);
+		newBoard.getBoardState().put("h2", blackRook);
+		assertTrue(newBoard.isCheckMate(WHITE));
+		Rook whiteRook = new Rook(WHITE);
+		newBoard.getBoardState().put("b3", whiteRook);
+		newBoard.print();
+		assertFalse(newBoard.isCheckMate(WHITE));
 		newBoard.print();
 	}
 }
