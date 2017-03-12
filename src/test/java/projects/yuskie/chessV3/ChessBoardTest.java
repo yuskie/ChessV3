@@ -169,4 +169,42 @@ public class ChessBoardTest {
 		assertNull(newBoard.getBoardState().get("a5"));
 		assertNull(newBoard.getBoardState().get("b7"));
 	}
+	
+	@Test
+	public void check_king_destroys_Test(){
+		Pawn blackPawn = new Pawn(BLACK);
+		King whiteKing = new King(WHITE);
+		Rook whiteRook = new Rook(WHITE);
+		newBoard.getBoardState().put("d3", whiteKing);
+		newBoard.getBoardState().put("e4", blackPawn);
+		newBoard.getBoardState().put("h4", whiteRook);
+		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
+		assertTrue(newBoard.movePiece(WHITE, "d3", "e4"));
+	}
+	
+	@Test
+	public void check_rook_destroys_Test(){
+		Pawn blackPawn = new Pawn(BLACK);
+		King whiteKing = new King(WHITE);
+		Rook whiteRook = new Rook(WHITE);
+		newBoard.getBoardState().put("d3", whiteKing);
+		newBoard.getBoardState().put("e4", blackPawn);
+		newBoard.getBoardState().put("h4", whiteRook);
+		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
+		assertTrue(newBoard.movePiece(WHITE, "h4", "e4"));
+		newBoard.print();
+	}
+	
+	@Test
+	public void check_rook_blocks_Test(){
+		Bishop blackBishop = new Bishop(BLACK);
+		King whiteKing = new King(WHITE);
+		Rook whiteRook = new Rook(WHITE);
+		newBoard.getBoardState().put("d3", whiteKing);
+		newBoard.getBoardState().put("f5", blackBishop);
+		newBoard.getBoardState().put("h4", whiteRook);
+		assertFalse(newBoard.movePiece(WHITE, "h4", "h5"));
+		assertTrue(newBoard.movePiece(WHITE, "h4", "e4"));
+		newBoard.print();
+	}
 }

@@ -12,7 +12,7 @@ public class Pawn implements Piece {
 	public Pawn(Color color) {
 		this.color = color;
 		moved = false;
-	}
+	}	
 	
 	public boolean validMove(String startLocation, String endLocation) {
 		int yStart = Integer.parseInt(startLocation.substring(1));
@@ -23,9 +23,9 @@ public class Pawn implements Piece {
 			return false;
 		}
 		if(!moved){
-			return onlyYMovement(startLocation, endLocation) && straightMovement(startLocation, endLocation, MAX_DISTANCE);
+			return (onlyYMovement(startLocation, endLocation) && straightMovement(startLocation, endLocation, MAX_DISTANCE)) || diagonalMovement(startLocation, endLocation, 1);
 		}
-		return onlyYMovement(startLocation, endLocation) && straightMovement(startLocation, endLocation, NORMAL_DISTANCE);
+		 return (onlyYMovement(startLocation, endLocation) && straightMovement(startLocation, endLocation, NORMAL_DISTANCE)) || diagonalMovement(startLocation, endLocation, 1);
 	}
 
 	public String print() {

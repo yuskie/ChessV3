@@ -48,13 +48,31 @@ public class ChessBoard {
 		Piece movingPiece = boardState.get(startLocation);
 		if (movingPiece == null || movingPiece.getColor() != color) {
 			return false;
-		} else if (isInCheck(color)){
-			outOfCheck(startLocation, endLocation);
+		} else if (isInCheck(color)) {
+			return outOfCheck(startLocation, endLocation);
 		} else if (checkValidMove(startLocation, endLocation, movingPiece)) {
-			pawnMoved = pawnMoved(startLocation, endLocation, movingPiece);
-			movePieces(startLocation, endLocation, movingPiece);
-			pawnPromotion(endLocation, movingPiece);
-			return true;
+			if (movingPiece.getClass() == Pawn.class) {
+				if (enPassant(startLocation, endLocation, movingPiece)) {
+					return true;
+				} else {
+					if (Utility.diagonalMovement(startLocation, endLocation, 1)) {
+						if (boardState.get(endLocation) != null
+								&& Utility.diagonalMovement(startLocation, endLocation, 1)) {
+							movePieces(startLocation, endLocation, movingPiece);
+							return true;
+						}
+						return false;
+					} else {
+						pawnMoved = pawnMoved(startLocation, endLocation, movingPiece);
+						movePieces(startLocation, endLocation, movingPiece);
+						pawnPromotion(endLocation, movingPiece);
+						return true;
+					}
+				}
+			} else {
+				movePieces(startLocation, endLocation, movingPiece);
+				return true;
+			}
 		} else if (movingPiece.getClass() == King.class) {
 			King kingPiece = (King) movingPiece;
 			if (canCastle(startLocation, endLocation, kingPiece)) {
@@ -67,8 +85,22 @@ public class ChessBoard {
 					return true;
 				}
 			}
-		} else if (movingPiece.getClass() == Pawn.class) {
-			return enPassant(startLocation, endLocation, movingPiece);
+		}
+		return false;
+	}
+
+	private boolean outOfCheck(String startLocation, String endLocation) {
+		Piece startPiece = boardState.get(startLocation);
+		Piece endPiece = boardState.get(endLocation);
+		while (checkValidMove(startLocation, endLocation, startPiece)) {
+			movePieces(startLocation, endLocation, startPiece);
+			if (isInCheck(startPiece.getColor())) {
+				boardState.put(endLocation, endPiece);
+				boardState.put(startLocation, startPiece);
+				return false;
+			} else {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -87,6 +119,13 @@ public class ChessBoard {
 	}
 
 	public boolean isCheckMate(Color color) {
+		String kingLoc = locateKing(color);
+		Piece king = boardState.get(kingLoc);
+		List<String> kingMoves = Utility.generateAllMoves(kingLoc, king);
+		for(String move: kingMoves){
+			isInCheck(color);
+			
+		}
 		return false;
 	}
 
@@ -194,13 +233,20 @@ public class ChessBoard {
 		return null;
 	}
 
-	private boolean isInCheck(Color color){
+	private boolean isInCheck(Color color, String kingLoc, String endLoc){
+		Piece king = boardState.get(kingLoc);
+		Piece endPiece = boardState.get(endLoc);
+		movePieces(kingLoc, endLoc, king);
+		return false;
+	}
+	
+	private boolean isInCheck(Color color) {
 		String kingLoc = locateKing(color);
 		Set<String> locations = boardState.keySet();
-		for(String loc: locations){
-			if(boardState.get(loc) != null && boardState.get(loc).getColor() != color){
+		for (String loc : locations) {
+			if (boardState.get(loc) != null && boardState.get(loc).getColor() != color) {
 				List<String> moves = Utility.generateAllMoves(loc, boardState.get(loc));
-				if(moves.contains(kingLoc) && blockingPath(loc, kingLoc)){
+				if (moves.contains(kingLoc) && blockingPath(loc, kingLoc)) {
 					return true;
 				}
 			}
