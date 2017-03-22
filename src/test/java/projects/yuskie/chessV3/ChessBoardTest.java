@@ -220,7 +220,7 @@ public class ChessBoardTest {
 	}
 	
 	@Test
-	public void checkmate_Test(){
+	public void basic_checkmate_Test(){
 		Queen blackQueen = new Queen(BLACK);
 		King whiteKing = new King(WHITE);
 		newBoard.getBoardState().put("a1", whiteKing);
@@ -230,8 +230,41 @@ public class ChessBoardTest {
 		assertTrue(newBoard.isCheckMate(WHITE));
 		Rook whiteRook = new Rook(WHITE);
 		newBoard.getBoardState().put("b3", whiteRook);
-		newBoard.print();
 		assertFalse(newBoard.isCheckMate(WHITE));
-		newBoard.print();
+	}
+	
+	@Test
+	public void checkmate_startup_test(){
+		newBoard.setupNewGame();
+		assertFalse(newBoard.isCheckMate(BLACK));
+		assertFalse(newBoard.isCheckMate(WHITE));
+	}
+	
+	@Test
+	public void checkmate_blocked_king_test(){
+		Knight whiteKnight = new Knight(WHITE);
+		King blackKing = new King(BLACK);
+		Rook blackRook = new Rook(BLACK);
+		Pawn blackPawn = new Pawn(BLACK);
+		newBoard.getBoardState().put("b3", whiteKnight);
+		newBoard.getBoardState().put("a1", blackKing);
+		newBoard.getBoardState().put("b2", blackPawn);
+		newBoard.getBoardState().put("a2", blackRook);
+		assertFalse(newBoard.isCheckMate(BLACK));
+	}
+	
+	@Test
+	public void can_destroy_piece_checkmate_test(){
+		Queen whiteQueen = new Queen(WHITE);
+		King blackKing = new King(BLACK);
+		Rook blackRook = new Rook(BLACK);
+		Pawn blackPawn = new Pawn(BLACK);
+		Bishop blackBishop = new Bishop(BLACK);
+		newBoard.getBoardState().put("a1", blackKing);
+		newBoard.getBoardState().put("b1", blackBishop);
+		newBoard.getBoardState().put("a2", blackPawn);
+		newBoard.getBoardState().put("h1", blackRook);
+		newBoard.getBoardState().put("h8", whiteQueen);
+		assertFalse(newBoard.isCheckMate(BLACK));
 	}
 }

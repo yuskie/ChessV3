@@ -106,7 +106,7 @@ public class UtilityTest {
 		assertEquals(7, Utility.generateAllMoves("a1", (Piece) bishop).size());
 		assertEquals(3, Utility.generateAllMoves("a1", (Piece) king).size());
 		assertEquals(2, Utility.generateAllMoves("a1", (Piece) knight).size());
-		assertEquals(2, Utility.generateAllMoves("a1", (Piece) pawn).size());
+		assertEquals(3, Utility.generateAllMoves("a1", (Piece) pawn).size());
 		assertEquals(21, Utility.generateAllMoves("a1", (Piece) queen).size());
 		assertEquals(14, Utility.generateAllMoves("a1", (Piece) rook).size());
 	}
