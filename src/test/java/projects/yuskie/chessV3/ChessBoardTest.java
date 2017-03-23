@@ -130,18 +130,20 @@ public class ChessBoardTest {
 		
 	}
 	
-//	@Test
-//	public void pawn_promotion(){
-//		Pawn blackPawn = new Pawn(BLACK);
-//		Pawn whitePawn = new Pawn(WHITE);
-//		newBoard.getBoardState().put("a7", whitePawn);
-//		newBoard.getBoardState().put("a2", blackPawn);
-//		newBoard.movePiece(WHITE, "a7", "a8");
-//		assertNotEquals(newBoard.getBoardState().get("a8").getClass(), Pawn.class);
-//		newBoard.movePiece(BLACK, "a2", "a1");
-//		assertNotEquals(newBoard.getBoardState().get("a1").getClass(), Pawn.class);
-//	}
-//	
+	@Test
+	public void pawn_promotion_test(){
+		Pawn blackPawn = new Pawn(BLACK);
+		Pawn whitePawn = new Pawn(WHITE);
+		newBoard.getBoardState().put("a8", whitePawn);
+		assertTrue(newBoard.pawnPromotion());
+		assertTrue(newBoard.promotePawn("kn"));
+		newBoard.getBoardState().put("a1", blackPawn);
+		assertTrue(newBoard.pawnPromotion());
+		assertTrue(newBoard.promotePawn("kn"));
+		assertNotEquals(newBoard.getBoardState().get("a8").getClass(), Pawn.class);
+		assertNotEquals(newBoard.getBoardState().get("a1").getClass(), Pawn.class);
+	}
+	
 	@Test
 	public void black_pawn_enpassant(){
 		Pawn blackPawn = new Pawn(BLACK);
@@ -266,5 +268,19 @@ public class ChessBoardTest {
 		newBoard.getBoardState().put("h1", blackRook);
 		newBoard.getBoardState().put("h8", whiteQueen);
 		assertFalse(newBoard.isCheckMate(BLACK));
+	}
+	
+	@Test
+	public void scholar_checkmate_test(){
+		newBoard.setupNewGame();
+		newBoard.movePiece(BLACK, "b8", "c6");
+		newBoard.movePiece(BLACK, "g8", "f6");
+		newBoard.movePiece(BLACK, "e7", "e5");
+		newBoard.movePiece(WHITE, "e2", "e4");
+		newBoard.movePiece(WHITE, "d1", "h5");
+		newBoard.movePiece(WHITE, "f1", "c4");
+		newBoard.movePiece(WHITE, "h5", "f7");
+		newBoard.print();
+		assertTrue(newBoard.isCheckMate(BLACK));
 	}
 }

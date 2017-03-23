@@ -40,6 +40,14 @@ public class Chess extends GameBase {
 				if (!moved) {
 					System.out.println("Invalid move");
 				}
+				if(newChessBoard.pawnPromotion()){
+					boolean pawnPromoted = false;
+					while(!pawnPromoted){
+						System.out.print("What would you like to promote to? (KN, B, Q, R)");
+						String pieceType = scanner.nextLine().toLowerCase();
+						pawnPromoted = newChessBoard.promotePawn(pieceType);
+					}
+				}
 			}
 		}else{
 			players.remove(player-1);
