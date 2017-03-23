@@ -1,6 +1,5 @@
 package projects.yuskie.chessV3.chess;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,15 +150,8 @@ public class ChessBoard {
 				}
 				if (boardState.get(loc) != null && boardState.get(loc).getColor() != color) {
 					List<String> pieceMoves = Utility.generateAllMoves(loc, boardState.get(loc));
-					if(pieceMoves.contains(move)){
-						for(String sameColorLoc: locations){
-							if (boardState.get(sameColorLoc) != null && boardState.get(sameColorLoc).getColor() == color && boardState.get(sameColorLoc) != king) {
-								List<String> sameColorMoves = Utility.generateAllMoves(sameColorLoc,boardState.get(sameColorLoc));
-								if(sameColorMoves.contains(loc)){
-									return false;
-								}
-							}
-						}
+					if(pieceMoves.contains(move) && canPieceBeRemoved(color, king, locations, loc)){
+						return false;
 					}
 				}
 				
@@ -169,6 +161,17 @@ public class ChessBoard {
 			return false;
 		}
 		return true;
+	}
+
+	private boolean canPieceBeRemoved(Color color, Piece king, Set<String> locations, String loc) {
+		for(String sameColorLoc: locations){
+			if (boardState.get(sameColorLoc) != null && boardState.get(sameColorLoc).getColor() == color && boardState.get(sameColorLoc) != king) {
+				List<String> sameColorMoves = Utility.generateAllMoves(sameColorLoc,boardState.get(sameColorLoc));
+				if(sameColorMoves.contains(loc)){
+					return true;
+				}
+			}
+		}return false;
 	}
 
 	public void print() {
